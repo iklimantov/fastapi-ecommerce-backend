@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field, EmailStr
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class CategoryCreate(BaseModel):
@@ -97,18 +97,29 @@ class UserCreate(BaseModel):
     """
     Модель для создания и обновления пользователя.
     """
-    email: Annotated[EmailStr, Field(description='Email пользователя')]
-    password: Annotated[str, Field(min_length=8, description="Пароль (минимум 8 символов)")]
-    role: Annotated[str, Field(default="buyer", pattern="^(buyer|seller)$", description="Роль: 'buyer' или 'seller'")]
+
+    email: Annotated[EmailStr, Field(description="Email пользователя")]
+    password: Annotated[
+        str, Field(min_length=8, description="Пароль (минимум 8 символов)")
+    ]
+    role: Annotated[
+        str,
+        Field(
+            default="buyer",
+            pattern="^(buyer|seller)$",
+            description="Роль: 'buyer' или 'seller'",
+        ),
+    ]
 
 
 class User(BaseModel):
     """
     Модель для ответа с данными пользователя.
     """
-    id: Annotated[int, Field(..., description='Уникальный идентификатор пользователя')]
-    email: Annotated[EmailStr, Field(..., description='Email пользователя')]
-    is_active: Annotated[bool, Field(..., description='Активность пользователя')]
+
+    id: Annotated[int, Field(..., description="Уникальный идентификатор пользователя")]
+    email: Annotated[EmailStr, Field(..., description="Email пользователя")]
+    is_active: Annotated[bool, Field(..., description="Активность пользователя")]
     role: Annotated[str, Field(..., description="Роль: 'buyer' или 'seller")]
 
     model_config = ConfigDict(from_attributes=True)
