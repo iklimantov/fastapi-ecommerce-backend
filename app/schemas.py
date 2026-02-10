@@ -106,7 +106,7 @@ class UserCreate(BaseModel):
         str,
         Field(
             default="buyer",
-            pattern="^(buyer|seller)$",
+            pattern="^(buyer|seller|admin)$",
             description="Роль: 'buyer' или 'seller'",
         ),
     ]
@@ -120,6 +120,6 @@ class User(BaseModel):
     id: Annotated[int, Field(..., description="Уникальный идентификатор пользователя")]
     email: Annotated[EmailStr, Field(..., description="Email пользователя")]
     is_active: Annotated[bool, Field(..., description="Активность пользователя")]
-    role: Annotated[str, Field(..., description="Роль: 'buyer' или 'seller")]
+    role: Annotated[str, Field(..., description="Роль: 'buyer', 'seller' или 'admin'")]
 
     model_config = ConfigDict(from_attributes=True)
