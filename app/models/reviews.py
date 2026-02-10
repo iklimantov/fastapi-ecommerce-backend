@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import DATETIME, Boolean, ForeignKey, Integer, Text
+from sqlalchemy import Boolean, ForeignKey, Integer, Text, TIMESTAMP
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.database import Base
@@ -17,7 +17,7 @@ class Review(Base):
         Integer, ForeignKey("products.id"), nullable=False
     )
     comment: Mapped[str | None] = mapped_column(Text, nullable=True)
-    comment_date: Mapped[datetime] = mapped_column(DATETIME, default=datetime.now)
+    comment_date: Mapped[datetime] = mapped_column(TIMESTAMP, default=datetime.now)
     grade: Mapped[int] = mapped_column(Integer, nullable=False)  # Оценка от 1 до 5
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
 

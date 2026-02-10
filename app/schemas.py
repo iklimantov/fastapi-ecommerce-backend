@@ -1,5 +1,6 @@
 from decimal import Decimal
 from typing import Annotated
+from datetime import datetime
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
@@ -131,3 +132,24 @@ class RefreshTokenRequest(BaseModel):
     """
 
     refresh_token: str
+
+
+class Review(BaseModel):
+    """
+    Модель для ответа с данными отзыва
+    """
+    id: Annotated[int, Field(..., description="Уникальный идентификатор отзыва")]
+    user_id: Annotated[int, Field(..., description="Идентификатор пользователя, написавшего отзыв")]
+    product_id: Annotated[int, Field(..., description="Идентификатор товара, на который написан отзыв")]
+    comment: Annotated[str, Field(description="Текст отзыва")]
+    comment_date: Annotated[datetime, Field(..., description="Дата и время создания отзыва")]
+    grade: Annotated[int, Field(..., description="Оценка товара")]  # Оценка от 1 до 5
+    is_active: Annotated[bool, Field(..., description="Активность отзыва")]
+
+
+class ReviewCreate(BaseModel):
+    """
+    Модель для создания и обновления отзыва.
+    """
+    comment: Annotated[str | None, Field(default=None, max_length=500, description="Текст отзыва")]
+    grade: Annotated[int, Field(..., ge=1, le=5, description="Оценка товара")]  # Оценка от 1 до 5
