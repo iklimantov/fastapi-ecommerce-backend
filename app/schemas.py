@@ -123,3 +123,11 @@ class User(BaseModel):
     role: Annotated[str, Field(..., description="Роль: 'buyer', 'seller' или 'admin'")]
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class RefreshTokenRequest(BaseModel):
+    """
+    Модель для обновления refresh и access токена
+    """
+
+    refresh_token: str
