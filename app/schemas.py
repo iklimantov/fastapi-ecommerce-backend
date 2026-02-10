@@ -1,7 +1,7 @@
 from decimal import Decimal
 from typing import Annotated
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 
 class CategoryCreate(BaseModel):
@@ -77,7 +77,6 @@ class ProductCreate(BaseModel):
 class Product(BaseModel):
     """
     Модель для ответа с данными товара.
-    Используется в GET-запросах.
     """
 
     id: Annotated[int, Field(..., description="Уникальный идентификатор товара")]
@@ -92,3 +91,43 @@ class Product(BaseModel):
     is_active: Annotated[bool, Field(..., description="Активность товара")]
 
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserCreate(BaseModel):
+    """
+    Модель для создания и обновления пользователя.
+    """
+
+    email: Annotated[EmailStr, Field(description="Email пользователя")]
+    password: Annotated[
+        str, Field(min_length=8, description="Пароль (минимум 8 символов)")
+    ]
+    role: Annotated[
+        str,
+        Field(
+            default="buyer",
+            pattern="^(buyer|seller|admin)$",
+            description="Роль: 'buyer' или 'seller'",
+        ),
+    ]
+
+
+class User(BaseModel):
+    """
+    Модель для ответа с данными пользователя.
+    """
+
+    id: Annotated[int, Field(..., description="Уникальный идентификатор пользователя")]
+    email: Annotated[EmailStr, Field(..., description="Email пользователя")]
+    is_active: Annotated[bool, Field(..., description="Активность пользователя")]
+    role: Annotated[str, Field(..., description="Роль: 'buyer', 'seller' или 'admin'")]
+
+    model_config = ConfigDict(from_attributes=True)
+
+
+class RefreshTokenRequest(BaseModel):
+    """
+    Модель для обновления refresh и access токена
+    """
+
+    refresh_token: str
