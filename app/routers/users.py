@@ -6,12 +6,8 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.auth import (
-    create_access_token,
-    create_refresh_token,
-    hash_password,
-    verify_password,
-)
+from app.auth import (create_access_token, create_refresh_token, hash_password,
+                      verify_password)
 from app.config import ALGORITHM, SECRET_KEY
 from app.db_depends import get_async_db
 from app.models.users import User as UserModel
