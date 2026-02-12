@@ -16,3 +16,4 @@ class User(Base):
     )  # buyer or seller or admin
 
     products: Mapped["Product"] = relationship("Product", back_populates="seller")
+    reviews: Mapped[list["Review"]] = relationship("Review", back_populates="user")

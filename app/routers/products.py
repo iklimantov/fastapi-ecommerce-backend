@@ -1,3 +1,5 @@
+from typing import Annotated
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -6,9 +8,11 @@ from app.auth import get_current_seller
 from app.db_depends import get_async_db
 from app.models import Category as CategoryModel
 from app.models import Product as ProductModel
+from app.models.reviews import Review as ReviewModel
 from app.models.users import User as UserModel
 from app.schemas import Product as ProductSchema
 from app.schemas import ProductCreate
+from app.schemas import Review as ReviewSchema
 
 router = APIRouter(prefix="/products", tags=["products"])
 
@@ -176,8 +180,42 @@ async def delete_product(
         .where(ProductModel.id == product_id)
         .values(is_active=False)
     )
+
+    # Мягкое удаление отзывов на товар
+    await db.execute(
+        update(ReviewModel)
+        .where(ReviewModel.product_id == product_id)
+        .values(is_active=False)
+    )
+
     await db.commit()
     return {
         "status": "success",
         "message": f"Product {product.name}, id={product_id} marked as inactive",
     }
+
+
+@router.get("/products/{product_id}/reviews/", response_model=list[ReviewSchema])
+async def get_product_reviews(
+    product_id: int, db: Annotated[AsyncSession, Depends(get_async_db)]
+):
+    """
+    Возвращает список отзывов на продукт по его id
+    """
+    # Проверка существования продукта
+    result = await db.scalars(
+        select(ProductModel).where(
+            ProductModel.id == product_id, ProductModel.is_active == True
+        )
+    )
+    if not result.first():
+        raise HTTPException(status_code=404, detail="Product not found or inactive")
+
+    # Возвращение списка отзывов
+    result = await db.scalars(
+        select(ReviewModel).where(
+            ReviewModel.product_id == product_id, ProductModel.is_active == True
+        )
+    )
+    reviews = result.all()
+    return reviews
