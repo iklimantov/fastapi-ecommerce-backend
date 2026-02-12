@@ -154,6 +154,8 @@ class Review(BaseModel):
     grade: Annotated[int, Field(..., description="Оценка товара")]  # Оценка от 1 до 5
     is_active: Annotated[bool, Field(..., description="Активность отзыва")]
 
+    model_config = ConfigDict(from_attributes=True)
+
 
 class ReviewCreate(BaseModel):
     """
