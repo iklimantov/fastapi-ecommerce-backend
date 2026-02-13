@@ -105,12 +105,6 @@ async def delete_review(
     Удаляет отзыв по его id.
     Доступно пользователю, написавшему отзыв, или администратору
     """
-    # Проверка роли пользователя
-    if current_user.role not in ("admin", "buyer"):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Permission denied"
-        )
-
     # Проверка существования отзыва
     result = await db.scalars(
         select(ReviewModel).where(
@@ -122,10 +116,10 @@ async def delete_review(
         raise HTTPException(status_code=404, detail="Review not found or inactive")
 
     # Проверка авторства пользователя
-    if current_user.role == "buyer" and current_user.id != review_db.user_id:
+    if current_user.id != review_db.user_id or current_user.role != "admin":
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Users can only delete their own reviews",
+            detail="Permission denied",
         )
 
     # Мягкое удаление отзыва
