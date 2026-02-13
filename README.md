@@ -16,7 +16,9 @@ Backend интернет-магазина на FastAPI с асинхронной
 
 ### 1. Клонирование репозитория 
 
-```git clone https://github.com/iklimantov/fastapi-ecommerce-backend```
+```bash
+git clone https://github.com/iklimantov/fastapi-ecommerce-backend
+```
 
 ### 2. Переход в директорию проекта
 

@@ -8,7 +8,8 @@ from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import ALGORITHM, SECRET_KEY
+from app.config import (ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM,
+                        REFRESH_TOKEN_EXPIRE_DAYS, SECRET_KEY)
 from app.db_depends import get_async_db
 from app.models.users import User as UserModel
 
@@ -16,8 +17,6 @@ from app.models.users import User as UserModel
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="users/token")
 
 
